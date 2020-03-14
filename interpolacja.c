@@ -51,4 +51,26 @@ int main (void)
   return 0;
 }
 
+//Porownanie roznych interpolacji
+//Opisanie komend, screeny
 
+//https://stackoverflow.com/questions/10792015/gnuplot-plotting-multiple-line-graphs
+//https://stackoverflow.com/questions/40296851/gnuplot-log-plot-y-axis
+//http://lowrank.net/gnuplot/plot3d2-e.html
+//http://gnuplot-surprising.blogspot.com/2012/05/how-to-pick-out-maximum-and-minimum.html
+//http://gnuplot.sourceforge.net/docs_4.2/node237.html
+//http://gnuplot.sourceforge.net/demo/stats.html
+
+stats "dane2.dat" u 3 nooutput
+set label 1 "Maximun" at STATS_pos_max, STATS_max offset 1,-0.5
+set label 2 "Minimun" at STATS_pos_min, STATS_min offset 1,0.5
+splot "dane2.dat" w p pt 3 lc rgb"#ff0000" notitle, \
+     STATS_min w l lc rgb"#00ffff" notitle, \
+     STATS_max w l lc rgb"#00ffff" notitle
+
+stats "dane2.dat" u 3 nooutput
+set label 1 "Maximun" at STATS_pos_max, STATS_max offset 1,-0.5
+set label 2 "Minimun" at STATS_pos_min, STATS_min offset 1,0.5
+splot "dane2.dat" w p pt 3 lc rgb"#ff0000" notitle, \
+     STATS_min w l lc rgb"#00ffff" notitle, \
+     STATS_max w l lc rgb"#00ffff" notitle
