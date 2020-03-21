@@ -2,6 +2,7 @@
     "files.associations": {
         "gsl_spline.h": "c",
         "gsl_interp.h": "c",
-        "gsl_errno.h": "c"
+        "gsl_errno.h": "c",
+        "gsl_math.h": "c"
     }
 }
