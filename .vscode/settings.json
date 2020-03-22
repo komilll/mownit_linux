@@ -3,6 +3,10 @@
         "gsl_spline.h": "c",
         "gsl_interp.h": "c",
         "gsl_errno.h": "c",
-        "gsl_math.h": "c"
+        "gsl_math.h": "c",
+        "gsl_fit.h": "c",
+        "gsl_vector.h": "c",
+        "gsl_multifit.h": "c",
+        "gsl_multifit_nlin.h": "c"
     }
 }

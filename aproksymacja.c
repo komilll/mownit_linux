@@ -5,6 +5,16 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_chebyshev.h>
 #include <gsl/gsl_fit.h>
+#include <gsl/gsl_check_range.h>
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_multifit.h>
+#include <gsl/gsl_multifit_nlin.h>
+#include <gsl/gsl_multifit_nlinear.h>
+#include <gsl/gsl_blas_types.h>
+#include <gsl/gsl_blas.h>
+#include <gsl/gsl_randist.h>
 
 double funcExp(double x, void *p)
 {
@@ -198,12 +208,42 @@ void fitLinear()
     printf("c0: %f --- c1: %f\n", c0, c1);
 }
 
+double funcCheb(double x, void *p)
+{
+    (void)(p); //avoid unused parameter warning
+    return pow(0.5, pow(x, 2) + 2 * x);
+}
+
+void fitCheb()
+{
+    const int stepsCount = 1000;
+    FILE* outputR4 = fopen("cheb_fit_r4.txt", "w");
+    FILE* outputR40 = fopen("cheb_fit_r40.txt", "w");
+
+    gsl_cheb_series* cs = gsl_cheb_alloc(40);
+    gsl_function function;
+    function.function = funcCheb;
+    function.params = 0;
+
+    gsl_cheb_init(cs, &function, -1.0, 1.0);
+    for (int i = -stepsCount; i <= stepsCount; i++)
+    {
+        double x = (double)i / (double)stepsCount;
+        double r4 = gsl_cheb_eval_n(cs, 4, x);
+        double r40 = gsl_cheb_eval_n(cs, 40, x);
+        fprintf (outputR4,"%g %g\n", x, r4);
+        fprintf (outputR40,"%g %g\n", x, r40);
+    }
+    gsl_cheb_free(cs);
+}
+
 int main (int argc, char* argv[])
 {
     calculateExp();
     calculateSign();
     calculateAbs();
     fitLinear();
+    fitCheb();
     return 0;
 }
 
@@ -235,7 +275,8 @@ plot "cheb_sign_r1.txt" with lines, \
 
 ================
 
-plot "linear_original.txt" with lines, \
-    "linear_fit.txt" with lines
+plot "linear_original.txt" with lines title 'Original', \
+    "linear_fit.txt" with lines title 'Linear least sqr fit', \
+    "cheb_fit_r4.txt" with lines title 'Chebyshev approx R4'
 
 */
