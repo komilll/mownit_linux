@@ -5,9 +5,9 @@ export LD_LIBRARY_PATH=/home/kamil/mownit_linux/gsl/lib
 CFLAGS=-I$(GSL_HOME)/include
 LDFLAGS=-L$(GSL_HOME)/lib -lgsl -lgslcblas -lm 
 
-all: aproksymacja
+all: calkowanie
 
-aproksymacja: aproksymacja.o
+calkowanie: calkowanie.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 clean:
