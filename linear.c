@@ -75,14 +75,28 @@ void checkSolution(double* m, double* b, gsl_vector x, int size)
     }
 }
 
-void decomp()
+void decomp(gsl_matrix *A, gsl_permutation* p, int *signum, int size)
 {
+    FILE* output = fopen("decomp.txt", "w");
 
+    clock_t start = clock();
+    gsl_linalg_LU_decomp(A, p, signum);
+    clock_t end = clock();
+
+    double t = ((double) (end - start)) / CLOCKS_PER_SEC;
+    if (STORE_TIMING) fprintf (output,"%d %g\n", size, t);
 }
 
-void solve()
+void solve(const gsl_matrix* LU, const gsl_permutation* p, const gsl_vector* b, gsl_vector* x, int size)
 {
-    
+    FILE* output = fopen("solve.txt", "w");
+
+    clock_t start = clock();
+    gsl_linalg_LU_solve(LU, p, b, x);
+    clock_t end = clock();
+
+    double t = ((double) (end - start)) / CLOCKS_PER_SEC;
+    if (STORE_TIMING) fprintf (output,"%d %g\n", size, t);
 }
 
 void calculate(int n)
@@ -107,8 +121,8 @@ void calculate(int n)
     
     gsl_permutation *p = gsl_permutation_alloc(n);
 
-    gsl_linalg_LU_decomp(&m.matrix, p, &s);
-    gsl_linalg_LU_solve(&m.matrix, p, &b.vector, x);
+    decomp(&m.matrix, p, &s, n);
+    solve(&m.matrix, p, &b.vector, x, n);
 
     if (DEBUG){
         printf("Solution X:\n");
