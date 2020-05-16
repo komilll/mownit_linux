@@ -7,6 +7,9 @@ int DEBUG = 1;
 int DEBUG_SOLUTION = 1;
 int STORE_TIMING = 0;
 
+FILE* decompFile;
+FILE* solveFile;
+
 double* generateVector(int size)
 {
     double* vec = calloc(sizeof(double), size);
@@ -77,26 +80,22 @@ void checkSolution(double* m, double* b, gsl_vector x, int size)
 
 void decomp(gsl_matrix *A, gsl_permutation* p, int *signum, int size)
 {
-    FILE* output = fopen("decomp.txt", "w");
-
     clock_t start = clock();
     gsl_linalg_LU_decomp(A, p, signum);
     clock_t end = clock();
 
     double t = ((double) (end - start)) / CLOCKS_PER_SEC;
-    if (STORE_TIMING) fprintf (output,"%d %g\n", size, t);
+    if (STORE_TIMING) fprintf (decompFile,"%d %g\n", size, t);
 }
 
 void solve(const gsl_matrix* LU, const gsl_permutation* p, const gsl_vector* b, gsl_vector* x, int size)
 {
-    FILE* output = fopen("solve.txt", "w");
-
     clock_t start = clock();
     gsl_linalg_LU_solve(LU, p, b, x);
     clock_t end = clock();
 
     double t = ((double) (end - start)) / CLOCKS_PER_SEC;
-    if (STORE_TIMING) fprintf (output,"%d %g\n", size, t);
+    if (STORE_TIMING) fprintf (solveFile,"%d %g\n", size, t);
 }
 
 void calculate(int n)
@@ -144,6 +143,8 @@ int main(int argc, char* argv[])
     int n = strtol(argv[1], &pEnd, 0);
 
     srand(time(NULL));
+    decompFile = fopen("decomp.txt", "w");
+    solveFile = fopen("solve.txt", "w");
 
     if (n == 0){
         return -1;
@@ -151,7 +152,7 @@ int main(int argc, char* argv[])
         DEBUG = 0;
         DEBUG_SOLUTION = 0;
         STORE_TIMING = 1;
-        for (int i = 10; i < 1000; i+=10){
+        for (int i = 10; i <= 1000; i+=10){
             calculate(i);
         }
     } else {
