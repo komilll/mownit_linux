@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_monte.h>
+#include <gsl/gsl_monte_plain.h>
+#include <gsl/gsl_monte_miser.h>
+#include <gsl/gsl_monte_vegas.h>
 
 double calculateIntegralValue(int sampleCount)
 {
@@ -12,7 +17,7 @@ double calculateIntegralValue(int sampleCount)
 
     for (int i = 0; i < sampleCount; ++i){
         double x = (double)rand() / RAND_MAX; // double [0, 1]
-        double y = (double)rand() / RAND_MAX * 2.0; // double [0, 1000]
+        double y = (double)rand() / RAND_MAX; // double [0, 1000]
 
         if (y <= 1.0/sqrt(x)){
             fprintf (file,"%g %g\n", x, y); //Save correct samples to file
@@ -44,10 +49,22 @@ void calculateIntegralError(int maxSamples)
     }
 }
 
+void monteCarloPLAIN()
+{
+    double res, err;
+    double xl[3] = {0,0,0};
+    double xu[3] = {M_PI, M_PI, M_PI};
+
+    const gsl_rng_type *T;
+    gsl_rng *r;
+
+    gsl_monte_function G;
+    
+}
+
 int main(void)
 {
-    double sum = calculateIntegralValue(100000);
-    printf("Sum: %g\n", sum);
+    // printf("Sum: %g\n", sum);
 
     return 0;
 }
