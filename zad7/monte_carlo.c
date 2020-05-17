@@ -11,11 +11,8 @@ double calculateIntegralValue(int sampleCount)
     FILE* file = fopen("sqrt.txt", "w");
 
     for (int i = 0; i < sampleCount; ++i){
-        double x = (double)rand() / RAND_MAX + 0.05; // double [0, 1]
-        if (x > 1.0){
-            x = 1.0;
-        }
-        double y = (double)rand() / RAND_MAX * 5.0; // double [0, 1000]
+        double x = (double)rand() / RAND_MAX; // double [0, 1]
+        double y = (double)rand() / RAND_MAX * 2.0; // double [0, 1000]
 
         if (y <= 1.0/sqrt(x)){
             fprintf (file,"%g %g\n", x, y); //Save correct samples to file
